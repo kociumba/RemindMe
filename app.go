@@ -5,7 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"time"
 
+	"github.com/gen2brain/beeep"
 	"gopkg.in/ini.v1"
 )
 
@@ -42,6 +44,21 @@ func (a *App) startup(ctx context.Context) {
 		defer f.Close()
 	}
 
+}
+
+func (a *App) ScheduleNotification(timeInSeconds int, title string, messageBody string) string {
+	go sendNotification(timeInSeconds, title, messageBody)
+
+	return "notification scheduled"
+}
+func sendNotification(timeInSeconds int, title string, messageBody string) {
+
+	time.Sleep(time.Duration(timeInSeconds) * time.Second)
+
+	err := beeep.Notify(title, messageBody, "assets/information.png")
+	if err != nil {
+		panic(err)
+	}
 }
 
 func (a *App) UpdateSettings(section string, key string, newValue string) string {

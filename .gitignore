@@ -3,3 +3,5 @@ node_modules
 frontend/dist
 /.deprecated
 /settings.ini
+./frontend/package.json.md5
+frontend/package.json.md5
