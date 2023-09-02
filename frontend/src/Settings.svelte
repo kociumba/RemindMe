@@ -1,5 +1,4 @@
 <script>
-	import Settings from './Settings.svelte';
     import autoAnimate from "@formkit/auto-animate";
     import { LoadSettings, UpdateSettings } from "../wailsjs/go/main/App.js";
     import { onMount, afterUpdate } from "svelte";
@@ -10,7 +9,6 @@
     // let key = "";  // deprecated variable, previously used for qurrying the settings file
     let singeleOutput = "";
     let settingsChanged = "";
-    let itemReverse = "";
     let output = writable([]);
 
     const settings = ["show_notification", "test_setting"];
@@ -21,31 +19,27 @@
     });
 
     async function getSettings() {
+
+        output.set([]);
+
         for (const setting of settings) {
             singeleOutput = await LoadSettings(section, setting);
             output.update((arr) => [...arr, singeleOutput]);
-            console.log(Boolean(output));
         }
     }
 
     async function handleChange(setting, item) {
-        if (item === "true") {
-            itemReverse = "false";
-        } else if (item === "false") {
-            itemReverse = "true";
-        }
+        const itemReverse = item === "true" ? "false" : "true";
 
-        console.log("change detected")
-        console.log(setting, itemReverse);
-        settingsChanged = await UpdateSettings(section, setting, itemReverse);
-        console.log(settingsChanged);
+        console.info(setting, itemReverse);
+        await UpdateSettings(section, setting, itemReverse);
 
         await getSettings();
     }
 
 </script>
 
-<main use:autoAnimate>
+<main >
     {#each $output as item, index}
         <div class="checkboxContainer">
             <!-- {item}
