@@ -17,10 +17,11 @@ func main() {
 
 	// Create application with options
 	err := wails.Run(&options.App{
-		Title:     "remindMe",
-		Width:     1024,
-		Height:    768,
-		Frameless: true,
+		Title:                            "remindMe",
+		Width:                            1024,
+		Height:                           768,
+		Frameless:                        true,
+		EnableFraudulentWebsiteDetection: true,
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},

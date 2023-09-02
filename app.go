@@ -2,9 +2,11 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
-	"strings"
+
+	"gopkg.in/ini.v1"
 )
 
 // App struct
@@ -21,55 +23,48 @@ func NewApp() *App {
 // so we can call the runtime methods
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
-}
 
-// Greet returns a greeting for the given name
-func (a *App) Greet(name string) string {
-	return fmt.Sprintf("Hello %s, It's show time!", name)
-}
+	settings := `# all the main settings go here
+	show_notification = true
+	test_setting = false`
 
-func (a *App) CreateSettingsOrAppend(append string) error {
-	f, err := os.OpenFile("settings.txt", os.O_CREATE|os.O_APPEND, 0666)
-	if err != nil {
-		panic(err)
-	}
+	if _, err := os.Stat("settings.ini"); err == nil {
+		// TODO: add a check if the settings file is valid
+		return
+	} else if errors.Is(err, os.ErrNotExist) {
+		f, _ := os.Create("settings.ini")
+		defer f.Close()
 
-	defer f.Close()
+		f.WriteString(settings)
 
-	if _, err := f.WriteString(append + "\n"); err != nil {
-		panic(err)
-	}
-
-	return nil
-}
-
-func (a *App) RemoveSettings(IndexOfSettingsToRemove int) string {
-	returnedSettings, err := os.ReadFile("settings.txt")
-	if err != nil {
-		return err.Error()
-	}
-
-	settings := strings.Split(string(returnedSettings), "\n")
-
-	if IndexOfSettingsToRemove >= 0 && IndexOfSettingsToRemove < len(settings) {
-
-		settings = append(settings[:IndexOfSettingsToRemove], settings[IndexOfSettingsToRemove+1:]...)
 	} else {
-		return "Invalid index"
+		f, _ := os.Create("settings.ini")
+		defer f.Close()
 	}
 
-	updatedSettings := strings.Join(settings, "\n")
-
-	err = os.WriteFile("settings.txt", []byte(updatedSettings), 0644)
-	if err != nil {
-		return err.Error()
-	}
-
-	return "Settings removed successfully"
 }
 
-func (a *App) ReadSettings() string {
-	returnedSettings, _ := os.ReadFile("settings.txt")
+func (a *App) UpdateSettings(section string, key string, newValue string) string {
 
-	return string(returnedSettings)
+	cfg, err := ini.Load("settings.ini")
+	if err != nil {
+		fmt.Printf("Fail to read file: %v", err)
+		os.Exit(1)
+	}
+
+	cfg.Section(section).Key(key).SetValue(newValue)
+	cfg.SaveTo("settings.ini")
+
+	return "setting changed"
+}
+
+func (a *App) LoadSettings(section string, key string) string {
+
+	cfg, err := ini.Load("settings.ini")
+	if err != nil {
+		fmt.Printf("Fail to read file: %v", err)
+		os.Exit(1)
+	}
+
+	return cfg.Section(section).Key(key).String()
 }

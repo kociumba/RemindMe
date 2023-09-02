@@ -9,11 +9,22 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@melt-ui/pp": "^0.1.2",
+    "@melt-ui/svelte": "^0.41.3",
+    "@smui/checkbox": "^7.0.0-beta.14",
     "@sveltejs/vite-plugin-svelte": "^1.4.0",
+    "autoprefixer": "^10.4.15",
+    "postcss": "^8.4.29",
     "svelte": "^3.49.0",
+    "svelte-sequential-preprocessor": "^2.0.1",
+    "tailwindcss": "^3.3.3",
     "vite": "^3.0.0"
   },
   "dependencies": {
-    "@formkit/auto-animate": "^0.7.0"
+    "@formkit/auto-animate": "^0.7.0",
+    "@svelteuidev/composables": "^0.15.3",
+    "@svelteuidev/core": "^0.15.3",
+    "svelte-headlessui": "^0.0.25",
+    "svelte-switcher": "^1.0.2"
   }
 }
