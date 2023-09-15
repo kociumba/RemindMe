@@ -6,6 +6,10 @@ export function LoadSettings(arg1, arg2) {
   return window['go']['main']['App']['LoadSettings'](arg1, arg2);
 }
 
+export function OpenEasterEgg(arg1) {
+  return window['go']['main']['App']['OpenEasterEgg'](arg1);
+}
+
 export function ScheduleNotification(arg1, arg2, arg3) {
   return window['go']['main']['App']['ScheduleNotification'](arg1, arg2, arg3);
 }

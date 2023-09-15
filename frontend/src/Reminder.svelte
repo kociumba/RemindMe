@@ -46,7 +46,6 @@
 		if (notificationTime) {
 			result = parseTime(notificationTime);
 			console.log("parseTime ran: ", notificationTime);
-			console.log("result: ", result);
 		}
   	}
 
@@ -68,9 +67,6 @@
 		console.log("sendNotification ran: ", IsNotifScheduled);
 		setTimeout(() => {
 			const id = reminderList.findIndex((reminder) => reminder.text === currentReminderTxt); // TODO: account for multiple reminders
-			console.log(currentReminderTxt)
-			console.log(reminderList);
-			console.log("id: ", id);
 			deleteReminder(id+1);
 		}, result * 1000);
 	}

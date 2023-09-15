@@ -4,7 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
+	"net/http"
 	"os"
+	"sync"
 	"time"
 
 	"github.com/gen2brain/beeep"
@@ -51,6 +54,9 @@ func (a *App) ScheduleNotification(timeInSeconds int, title string, messageBody 
 
 	return "notification scheduled"
 }
+
+// TODO: this is wrong, handle the schedualing in js frontend couse this will trigger a notif even if the app is closed and the reminder is deleted
+
 func sendNotification(timeInSeconds int, title string, messageBody string) {
 
 	time.Sleep(time.Duration(timeInSeconds) * time.Second)
@@ -84,4 +90,31 @@ func (a *App) LoadSettings(section string, key string) string {
 	}
 
 	return cfg.Section(section).Key(key).String()
+}
+
+// this is for an easter egg couse i'm bored
+
+var counter int
+var mutex = &sync.Mutex{}
+
+func incrementCounter(w http.ResponseWriter, r *http.Request) {
+
+	messages := [7]string{"hello", "easter", "egg", "fuck", "you", "go", "away"}
+
+	mutex.Lock()
+	counter++
+	fmt.Fprintf(w, messages[counter])
+	mutex.Unlock()
+
+}
+
+func (a *App) OpenEasterEgg(port string) {
+	http.HandleFunc("/", incrementCounter)
+
+	http.HandleFunc("/hi", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "Hi")
+	})
+
+	log.Fatal(http.ListenAndServe(":"+port, nil))
+
 }

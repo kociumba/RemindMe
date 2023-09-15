@@ -4,6 +4,7 @@
     import { onMount, afterUpdate } from "svelte";
     import { writable } from "svelte/store";
     import { Checkbox } from "@svelteuidev/core";
+	import { OpenEasterEgg } from "../wailsjs/go/main/App";
 
     let section = "";
     // let key = "";  // deprecated variable, previously used for qurrying the settings file
@@ -55,6 +56,12 @@
             />
         </div>
     {/each}
+    <Checkbox 
+        color="orange"
+        size="sm"
+        style="margin-left: 10px;"
+        on:click={OpenEasterEgg("8000")}
+    />
 </main>
 
 <style>
